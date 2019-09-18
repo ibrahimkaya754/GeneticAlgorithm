@@ -1,6 +1,8 @@
 # GeneticAlgorithm
 Genetic Algorithm for Optimization Problems
 
+MoGenA was tested with the global optimization test functions given at: https://www.sfu.ca/~ssurjano/optimization.html. The test functions tried with MoGenA are coded inside test_functions.py
+
 #####################################
 
 import genes
