@@ -1,0 +1,19 @@
+minimization                     = 0                          % 0: maximization, 1: minimization
+epsilon                          = 0.0000001                  % epsilon to prevent division by zero
+pc                               = 0.85                       % cross-over probability
+pm_init                          = 0.01                       % mutation probability
+best_individual_injection        = 1                          % 0: no injection, 1:injection
+migration                        = 1                          % 0: no-migration, 1: migration
+pmig_init                        = 0.03                       % migration probability if migration is allowed
+iteration                        = 150                        % number of iterations (generations)
+saved_data                       = 0                          % 1: use saved x_encoded values, 0: start randomly
+fitness_function                 = @PSO_function              % the function that will be optimized
+number_of_bits                   = 30                         % number of bits of each gene
+population_size                  = 100                        % population size / kromozom sayisi (1 kromozom = 1 birey)
+number_of_genes                  = 2                          % variable / gen sayisi / dimension sayisi
+selection_type                   = 1                          % 1: roulette-wheel, 2: roulette-wheel-tournament
+crossover_type                   = 2                          % 1: one-point, 2: two-point
+objective_number                 = 1                          % the number of the objectives that the fitness function gives out
+objectives(1,1:objective_number) = minimization               % the objectives of the output (forex: the first will be maksimized, the second will be minimized, the third...)
+lower_boundaries                 = 0 0	                      % lower boundary
+upper_boundaries                 = 512 512                    % upper boundary
