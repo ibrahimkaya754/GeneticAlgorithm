@@ -8,7 +8,7 @@ import random
 import math
 import genes
 
-def migration(birey,list_birey_encoded,fitness_values,migration_probability,objective_number,bitno,gene_no,remainder,best_encoded_ever):
+def migration(individual,list_individual_encoded,fitness_values,migration_probability,objective_number,bitno,gene_no,remainder,best_encoded_ever):
     if remainder == 1:
         migration_probability = migration_probability * 10
         
@@ -29,15 +29,15 @@ def migration(birey,list_birey_encoded,fitness_values,migration_probability,obje
                     bitt[ii] = 0
                 else:
                     bitt[ii] = 1        
-            birey[worst_indeks[0]].birey_update(bitt)
-            list_birey_encoded[worst_indeks[0]] = birey[worst_indeks[0]].binary_encoding()
+            individual[worst_indeks[0]].individual_update(bitt)
+            list_individual_encoded[worst_indeks[0]] = individual[worst_indeks[0]].binary_encoding()
         for jj in range(migration_number-1,migration_number):        
             worst_indeks = [i for i, j in enumerate(fitness_values) if j==sorted_fitness[jj]]
             worst_indices.append(worst_indeks)
-            birey[worst_indeks[0]].birey_update(best_encoded_ever)
-            list_birey_encoded[worst_indeks[0]] = birey[worst_indeks[0]].binary_encoding()
+            individual[worst_indeks[0]].individual_update(best_encoded_ever)
+            list_individual_encoded[worst_indeks[0]] = individual[worst_indeks[0]].binary_encoding()
     else:
         migration_existence = 0
-    return birey,list_birey_encoded,migration_existence
+    return individual,list_individual_encoded,migration_existence
     
     

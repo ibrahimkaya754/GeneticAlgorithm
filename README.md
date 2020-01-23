@@ -26,3 +26,5 @@ import global_fitness_normalization
 import migration
 
 #####################################
+
+The code is being converted to Class structure that can be imported to any environment on 23/01/2020

@@ -5,7 +5,7 @@ Created on Thu Mar  9 16:13:01 2017
 @author: SADMcan
 """
 import random
-class birey:
+class individual:
     def __init__(self,bitno,gene_no,decoding_matrix,lower_boundary,upper_boundary):
         bitt = []
         for ii in range(bitno*gene_no):
@@ -48,11 +48,11 @@ class birey:
             self.normalized_decoded_value[jj] = normalized_value
         return self.normalized_decoded_value
     
-    def birey_update(self,list_birey_encoded_yeni):
-        col  = len(list_birey_encoded_yeni)
+    def individual_update(self,list_individual_encoded_yeni):
+        col  = len(list_individual_encoded_yeni)
         bitt = []
         for ii in range(col):
-            bitt.insert(ii,list_birey_encoded_yeni[ii])
+            bitt.insert(ii,list_individual_encoded_yeni[ii])
         self.bit = bitt
         self.total_decoded_value = []
         self.normalized_decoded_value = []        
