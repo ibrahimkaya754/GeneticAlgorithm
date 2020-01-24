@@ -39,7 +39,7 @@ class MoGenA():
         self.saved_data             = use_saved_data
         self.objective_number       = objective_number
         self.migration_probability  = migration_probability
-        self.selection_type         = int(inp[13])
+        self.selection_type         = selection_type
         cross_over_probability = float(inp[2])
         crossover_type         = int(inp[14])          ## one-point / two-point
 
