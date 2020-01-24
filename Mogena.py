@@ -24,13 +24,21 @@ import global_fitness_normalization
 import migration
 
 class MoGenA():
-    def __init__(self,number_of_generation=100,number_of_bits=30,population_size=100,
-                 number_of_variables,mutation_probability=0.01,use_saved_data=False,
-                 objective_number=1,migration_probability=0.03,selection_type='roulette-wheel'):
+    def __init__(self,number_of_variables,number_of_generation=100,number_of_bits=30,population_size=100,
+                 mutation_probability=0.01,use_saved_data=False,
+                 objective_number=1,migration_probability=0.03,selection_type="roulette-wheel",
+                 cross_over_probability=0.85,crossover_type="two-point",read_input_file=False):
 
-        ### READ THE INPUTS FROM FILE AND APPEND THEM TO THE VARIABLES
-        inp = input.read_input()
-
+        ###### READ THE INPUTS FROM FILE AND APPEND THEM TO THE VARIABLES #####
+        if read_input_file:
+            inp = input.read_input()
+        #######################################################################
+        
+        dict_selection              = {'roulette-wheel'            :1,
+                                       'roulette-wheel-tournament' :2}
+        dict_crossover              = {'one-point' : 1, 
+                                       'two-point' : 2}
+        
         self.iteration              = number_of_generation
         self.number_of_bits         = number_of_bits
         self.population_size        = population_size
@@ -39,9 +47,9 @@ class MoGenA():
         self.saved_data             = use_saved_data
         self.objective_number       = objective_number
         self.migration_probability  = migration_probability
-        self.selection_type         = selection_type
-        cross_over_probability = float(inp[2])
-        crossover_type         = int(inp[14])          ## one-point / two-point
+        self.selection_type         = dict_selection[selection_type]
+        self.cross_over_probability = cross_over_probability
+        self.crossover_type         = dict_crossover[crossover_type]          ## one-point / two-point
 
         lower_boundary_index = 17
         upper_boundary_index = lower_boundary_index + self.number_of_genes
@@ -144,9 +152,9 @@ class MoGenA():
             [individual,list_individual_encoded,mig_exist]    = migration.migration(individual,list_individual_encoded,list_fitness_values_normalized,self.migration_probability,self.objective_number,number_of_bits,self.number_of_genes,remainder,best_individual_encoded_ever)
             # Selection - Crossover - Mutation #
             for j in range(int(self.population_size/2)):
-                [index1,index2]                     = selection.selectiontype(mig_exist,selection_type,self.number_of_genes,number_of_bits,list_cumulative_probability,list_individual_probability,population_size)
+                [index1,index2]                     = selection.selectiontype(mig_exist,self.selection_type,self.number_of_genes,number_of_bits,list_cumulative_probability,list_individual_probability,population_size)
                 list_selection_index[j]             = [index1,index2]
-                [offspring1,offspring2]             = crossover.crossover_type(cross_over_probability,crossover_type,list_individual_encoded,self.number_of_genes,number_of_bits,index1,index2)
+                [offspring1,offspring2]             = crossover.crossover_type(cross_over_probability,self.crossover_type,list_individual_encoded,self.number_of_genes,number_of_bits,index1,index2)
                 [offspring1,offspring2]             = mutation.mutation([offspring1,offspring2],self.mutation_probability)
                 list_offspring[2*j]                 = offspring1
                 list_offspring[2*j+1]               = offspring2
