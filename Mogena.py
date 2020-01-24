@@ -34,11 +34,14 @@ class MoGenA():
             inp = input.read_input()
         #######################################################################
         
+        ##################### Dictionaries ####################################
         dict_selection              = {'roulette-wheel'            :1,
                                        'roulette-wheel-tournament' :2}
         dict_crossover              = {'one-point' : 1, 
                                        'two-point' : 2}
+        #######################################################################
         
+        ################### Inputs ############################################
         self.iteration              = number_of_generation
         self.number_of_bits         = number_of_bits
         self.population_size        = population_size
@@ -62,16 +65,16 @@ class MoGenA():
             upper_boundaries.insert(ii,float(inp[upper_boundary_index]))
             lower_boundary_index = lower_boundary_index + 1    
             upper_boundary_index = upper_boundary_index + 1
-        ###################################################################
+        #######################################################################
             
-        #Binary Encoding    
+        ################### Binary Encoding ###################################
         decoding_array  = range(self.number_of_bits-1,-1,-1)
         decoding_matrix = []
         for ff in range(self.number_of_bits):
             decoding_matrix.insert(ff,2**decoding_array[ff])
-        ###################################################################
+        #######################################################################
             
-        ### POPULASYONUN OLUŞTURULMASI    
+        ################## Creating Population ################################ 
         individual                          = [] # individual listesi ilklendiriliyor
         list_individual_encoded             = [] # individual listesinin encoded hali ilklendiriliyor
         list_individual_decoded             = [] # individual listesinin decoded hali ilklendiriliyor
@@ -87,8 +90,7 @@ class MoGenA():
         list_max_val                        = [] # Her bir objective için maksimum deer atamas1 // Global fitness fonksiyonunda kullan1lacak
         best_individual_decoded_ever        = [] # Best individual ever - decoded
         best_individual_encoded_ever        = [] # Best individual ever - encoded
-
-        #listelerin initialize edilmesi
+        
         for jj in range(self.population_size): 
             individual[jj]                          = individual.append(None)
             list_individual_encoded[jj]             = list_individual_encoded.append(None)
@@ -103,8 +105,9 @@ class MoGenA():
 
         for j in range(int(self.population_size/2)):
             list_selection_index[j]            = list_selection_index.append(0)    
+        #######################################################################
 
-        #individualler, obje olarak tanımlanıyor. Her bir liste elemanı individual class'ına gönderilerek, obje olarak tanımlanıyor.
+        ########### Every Individual is defined as Genes Class Object #########
         if self.saved_data == False:
             for jj in range(self.population_size): 
                 individual[jj]              = genes.individual(number_of_bits,self.number_of_genes,decoding_matrix,lower_boundaries,upper_boundaries)
@@ -124,10 +127,10 @@ class MoGenA():
             for jj in range(len(list_individual_decoded),self.population_size): 
                 individual[jj]              = genes.individual(number_of_bits,self.number_of_genes,decoding_matrix,lower_boundaries,upper_boundaries)
                 list_individual_encoded[jj] = individual[jj].binary_encoding() 
+        #######################################################################
 
-        ### ITERASYONLARIN BAŞLAMASI
+        ##################### Iterations ######################################
         generation    = 0
-
         while generation < self.iteration:
             total_fitness                  = 0
             cumulative_probability         = 0
@@ -164,22 +167,23 @@ class MoGenA():
                 list_individual_encoded[jj]              = individual[jj].binary_encoding()
             print('generation = ', generation+1)    
             generation = generation + 1
-            
             #Saving Data
             output.output(list_individual_encoded)
             output.min_max_saved(list_min_val,list_max_val,best_individual_decoded_ever,best_individual_encoded_ever)
-
-        #Finding the Bests  
+        #######################################################################
+        
+        ################# Finding the Bests ###################################
         best_fitness                        = find_minmax.min_of_array(list_fitness_values)
         worst_fitness                       = find_minmax.max_of_array(list_fitness_values)
         best_fitness_index                  = [i for i, j in enumerate(list_fitness_values) if j==best_fitness]
         best_individual_decoded             = list_individual_decoded_normalized[best_fitness_index[0]]
         best_fitness_ever                   = list_min_val[0]
-
-        #Saving Data
+        #######################################################################
+        
+        #################### Saving Data ######################################
         output.output(list_individual_encoded)
         output.min_max_saved(list_min_val,list_max_val,best_individual_decoded_ever,best_individual_encoded_ever)
-                
+        #######################################################################        
             
             
 
