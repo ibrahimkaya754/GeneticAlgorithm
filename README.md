@@ -28,3 +28,4 @@ import migration
 #####################################
 
 The code is being converted to Class structure that can be imported to any environment on 23/01/2020
+The module Mogena_ver01 changed to Mogena
