@@ -24,7 +24,8 @@ import global_fitness_normalization
 import migration
 
 class MoGenA():
-    def __init__(self,number_of_variables,number_of_generation=100,number_of_bits=30,population_size=100,
+    def __init__(self,number_of_variables, lower_boundaries, upper_boundaries,
+                 number_of_generation=100,number_of_bits=30,population_size=100,
                  mutation_probability=0.01,use_saved_data=False,
                  objective_number=1,migration_probability=0.03,selection_type="roulette-wheel",
                  cross_over_probability=0.85,crossover_type="two-point",read_input_file=False):
@@ -52,19 +53,9 @@ class MoGenA():
         self.migration_probability  = migration_probability
         self.selection_type         = dict_selection[selection_type]
         self.cross_over_probability = cross_over_probability
-        self.crossover_type         = dict_crossover[crossover_type]          ## one-point / two-point
-
-        lower_boundary_index = 17
-        upper_boundary_index = lower_boundary_index + self.number_of_genes
-
-        lower_boundaries = []
-        upper_boundaries = []
-
-        for ii in range(self.number_of_genes):    
-            lower_boundaries.insert(ii,float(inp[lower_boundary_index]))
-            upper_boundaries.insert(ii,float(inp[upper_boundary_index]))
-            lower_boundary_index = lower_boundary_index + 1    
-            upper_boundary_index = upper_boundary_index + 1
+        self.crossover_type         = dict_crossover[crossover_type]   
+        self.lower_boundaries       = lower_boundaries
+        self.upper_boundaries       = upper_boundaries
         #######################################################################
             
         ################### Binary Encoding ###################################
@@ -110,7 +101,7 @@ class MoGenA():
         ########### Every Individual is defined as Genes Class Object #########
         if self.saved_data == False:
             for jj in range(self.population_size): 
-                individual[jj]              = genes.individual(number_of_bits,self.number_of_genes,decoding_matrix,lower_boundaries,upper_boundaries)
+                individual[jj]              = genes.individual(number_of_bits,self.number_of_genes,decoding_matrix,self.lower_boundaries,self.upper_boundaries)
                 list_individual_encoded[jj] = individual[jj].binary_encoding()
             for obj in range(self.objective_number):
                 list_min_val.append(float(10000000000))
@@ -121,11 +112,11 @@ class MoGenA():
         elif self.saved_data == True:
             [list_individual_encoded_saved,list_min_val,list_max_val,best_individual_decoded_ever,best_individual_encoded_ever] = input.read_saved_data(self.population_size,objective_number)
             for jj in range(len(list_individual_decoded)):
-                individual[jj]              = genes.individual(number_of_bits,self.number_of_genes,decoding_matrix,lower_boundaries,upper_boundaries)
+                individual[jj]              = genes.individual(number_of_bits,self.number_of_genes,decoding_matrix,self.lower_boudaries,self.upper_boundaries)
                 individual[jj].individual_update(list_individual_encoded_saved[jj])
                 list_individual_encoded[jj] = individual[jj].binary_encoding()
             for jj in range(len(list_individual_decoded),self.population_size): 
-                individual[jj]              = genes.individual(number_of_bits,self.number_of_genes,decoding_matrix,lower_boundaries,upper_boundaries)
+                individual[jj]              = genes.individual(number_of_bits,self.number_of_genes,decoding_matrix,self.lower_boudaries,self.upper_boundaries)
                 list_individual_encoded[jj] = individual[jj].binary_encoding() 
         #######################################################################
 
