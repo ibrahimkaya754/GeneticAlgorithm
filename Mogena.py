@@ -4,7 +4,7 @@
 First, Created on Thu Mar  9 13:17:58 2017
 MultiObjective Genetic Algorithm Code
 This code is converted to Class structure that can be imported from the environment for the upcoming projects 
-Modification began on 22/01/2020
+Modification began on 22/01/2020 Wednesday
 
 """
 # IMPORT MODULES
