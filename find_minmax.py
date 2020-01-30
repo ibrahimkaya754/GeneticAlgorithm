@@ -2,7 +2,7 @@
 """
 Created on Wed Mar 15 14:14:18 2017
 
-@author: SADMcan
+@author: ikaya
 """
 
 def min_func(x1,x2):
