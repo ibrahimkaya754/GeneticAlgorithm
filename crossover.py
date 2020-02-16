@@ -2,7 +2,7 @@
 """
 Created on Mon Mar 13 17:01:19 2017
 
-@author: SADMcan
+@author: ikaya
 """
 
 import random

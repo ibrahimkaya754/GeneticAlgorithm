@@ -8,16 +8,16 @@ Modification began on 22/01/2020
 
 """
 # IMPORT MODULES
-import genes
-import input
-import selection
-import crossover
-import mutation
-import output
-import find_minmax
-import global_fitness_normalization
-import migration
-import test_functions
+from .genes import *
+from .input import *
+from .selection import *
+from .crossover import *
+from .mutation import *
+from .output import *
+from .find_minmax import *
+from .global_fitness_normalization import *
+from .migration import *
+from .test_functions import *
 
 class MoGenA():
     def __init__(self,number_of_variables, lower_boundaries, upper_boundaries,
@@ -29,7 +29,7 @@ class MoGenA():
 
         ###### READ THE INPUTS FROM FILE AND APPEND THEM TO THE VARIABLES #####
         if read_input_file:
-            inp = input.read_input()
+            inp = read_input()
         #######################################################################
         
         ##################### Dictionaries ####################################
@@ -76,7 +76,7 @@ class MoGenA():
     def fitness_function(self,params):
         if self.fitting_function == 'griewank':
 #            print('global test function "egg" will run')
-            out = test_functions.ackley(params)
+            out = ackley(params)
         else:
             out = self.fitting_function(params)
         return out
@@ -119,7 +119,7 @@ class MoGenA():
         ########### Every Individual is defined as Genes Class Object #########
         if self.saved_data == False:
             for jj in range(self.population_size): 
-                self.individual[jj]              = genes.individual(self.number_of_bits,self.number_of_genes,self.decoding_matrix,self.lower_boundaries,self.upper_boundaries)
+                self.individual[jj]              = individual(self.number_of_bits,self.number_of_genes,self.decoding_matrix,self.lower_boundaries,self.upper_boundaries)
                 self.list_individual_encoded[jj] = self.individual[jj].binary_encoding()
             for obj in range(self.objective_number):
                 self.list_min_val.append(float(10000000000))
@@ -128,13 +128,13 @@ class MoGenA():
                 self.best_individual_decoded_ever.append(0)
             self.best_individual_encoded_ever = self.list_individual_encoded[0]
         elif self.saved_data == True:
-            [list_individual_encoded_saved,self.list_min_val,self.list_max_val,self.best_individual_decoded_ever,self.best_individual_encoded_ever] = input.read_saved_data(self.population_size,self.objective_number)
+            [list_individual_encoded_saved,self.list_min_val,self.list_max_val,self.best_individual_decoded_ever,self.best_individual_encoded_ever] = read_saved_data(self.population_size,self.objective_number)
             for jj in range(len(self.list_individual_decoded)):
-                self.individual[jj]              = genes.individual(self.number_of_bits,self.number_of_genes,self.decoding_matrix,self.lower_boundaries,self.upper_boundaries)
+                self.individual[jj]              = individual(self.number_of_bits,self.number_of_genes,self.decoding_matrix,self.lower_boundaries,self.upper_boundaries)
                 self.individual[jj].individual_update(list_individual_encoded_saved[jj])
                 self.list_individual_encoded[jj] = self.individual[jj].binary_encoding()
             for jj in range(len(self.list_individual_decoded),self.population_size): 
-                self.individual[jj]              = genes.individual(self.number_of_bits,self.number_of_genes,self.decoding_matrix,self.lower_boundaries,self.upper_boundaries)
+                self.individual[jj]              = individual(self.number_of_bits,self.number_of_genes,self.decoding_matrix,self.lower_boundaries,self.upper_boundaries)
                 self.list_individual_encoded[jj] = self.individual[jj].binary_encoding() 
         #######################################################################
 
@@ -150,11 +150,11 @@ class MoGenA():
                 self.list_individual_decoded[jj]                                                             = self.individual[jj].decoding_oper()
                 self.list_individual_decoded_normalized[jj]                                                  = self.individual[jj].normalization()
                 self.list_fitness_values[jj]                                                                 = self.fitness_function(self.list_individual_decoded_normalized[jj])
-                [self.list_min_val,self.list_max_val,self.best_individual_encoded_ever,self.best_individual_decoded_ever]   = find_minmax.min_max_upgrade(self.list_fitness_values[jj],self.list_min_val,self.list_max_val,jj,self.list_individual_encoded,self.list_individual_decoded_normalized,self.best_individual_encoded_ever,self.best_individual_decoded_ever)  
+                [self.list_min_val,self.list_max_val,self.best_individual_encoded_ever,self.best_individual_decoded_ever]   = min_max_upgrade(self.list_fitness_values[jj],self.list_min_val,self.list_max_val,jj,self.list_individual_encoded,self.list_individual_decoded_normalized,self.best_individual_encoded_ever,self.best_individual_decoded_ever)  
             # Normalized fitness - Global fitness - Total fitness Calculation
             for jj in range(self.population_size):
-                self.list_fitness_values_normalized[jj]  = global_fitness_normalization.fitness_value_normalization(self.list_fitness_values[jj],self.list_min_val,self.list_max_val)
-                self.list_global_fitness_values[jj]      = global_fitness_normalization.fitness_value(self.list_fitness_values_normalized[jj])
+                self.list_fitness_values_normalized[jj]  = fitness_value_normalization(self.list_fitness_values[jj],self.list_min_val,self.list_max_val)
+                self.list_global_fitness_values[jj]      = fitness_value(self.list_fitness_values_normalized[jj])
                 total_fitness                       = total_fitness + self.list_global_fitness_values[jj]
             # Individual & Cumulative Probability Calculation
             for jj in range(self.population_size):
@@ -162,13 +162,13 @@ class MoGenA():
                 cumulative_probability              = cumulative_probability + self.list_individual_probability[jj]
                 self.list_cumulative_probability[jj]     = cumulative_probability
             # Migration #   
-            [self.individual,self.list_individual_encoded,mig_exist]    = migration.migration(self.individual,self.list_individual_encoded,self.list_fitness_values_normalized,self.migration_probability,self.objective_number,self.number_of_bits,self.number_of_genes,remainder,self.best_individual_encoded_ever)
+            [self.individual,self.list_individual_encoded,mig_exist]    = migration(self.individual,self.list_individual_encoded,self.list_fitness_values_normalized,self.migration_probability,self.objective_number,self.number_of_bits,self.number_of_genes,remainder,self.best_individual_encoded_ever)
             # Selection - Crossover - Mutation #
             for j in range(int(self.population_size/2)):
-                [index1,index2]                     = selection.selectiontype(mig_exist,self.selection_type,self.number_of_genes,self.number_of_bits,self.list_cumulative_probability,self.list_individual_probability,self.population_size)
+                [index1,index2]                     = selectiontype(mig_exist,self.selection_type,self.number_of_genes,self.number_of_bits,self.list_cumulative_probability,self.list_individual_probability,self.population_size)
                 self.list_selection_index[j]             = [index1,index2]
-                [offspring1,offspring2]             = crossover.crossover_type(self.cross_over_probability,self.crossover_type,self.list_individual_encoded,self.number_of_genes,self.number_of_bits,index1,index2)
-                [offspring1,offspring2]             = mutation.mutation([offspring1,offspring2],self.mutation_probability)
+                [offspring1,offspring2]             = crossover_type(self.cross_over_probability,self.crossover_type,self.list_individual_encoded,self.number_of_genes,self.number_of_bits,index1,index2)
+                [offspring1,offspring2]             = mutation([offspring1,offspring2],self.mutation_probability)
                 self.list_offspring[2*j]                 = offspring1
                 self.list_offspring[2*j+1]               = offspring2
             # Generation Update #
@@ -178,14 +178,14 @@ class MoGenA():
             print('generation = ', generation+1)    
             generation = generation + 1
             #Saving Data
-            output.output(self.list_individual_encoded)
-            output.min_max_saved(self.list_min_val,self.list_max_val,self.best_individual_decoded_ever,self.best_individual_encoded_ever)
+            output(self.list_individual_encoded)
+            min_max_saved(self.list_min_val,self.list_max_val,self.best_individual_decoded_ever,self.best_individual_encoded_ever)
         #######################################################################
         
         ################# Finding the Bests ###################################
     def best_individual(self):
-        self.best_fitness                        = find_minmax.min_of_array(self.list_fitness_values)
-        self.worst_fitness                       = find_minmax.max_of_array(self.list_fitness_values)
+        self.best_fitness                        = min_of_array(self.list_fitness_values)
+        self.worst_fitness                       = max_of_array(self.list_fitness_values)
         self.best_fitness_index                  = [i for i, j in enumerate(self.list_fitness_values) if j==self.best_fitness]
         self.best_individual_decoded             = self.list_individual_decoded_normalized[self.best_fitness_index[0]]
         self.best_fitness_ever                   = self.list_min_val[0]
@@ -193,10 +193,6 @@ class MoGenA():
     
         #################### Saving Data ######################################
     def save(self):
-        output.output(self.list_individual_encoded)
-        output.min_max_saved(self.list_min_val,self.list_max_val,self.best_individual_decoded_ever,self.best_individual_encoded_ever)
-        #######################################################################        
-            
-            
-
-            
+        output(self.list_individual_encoded)
+        min_max_saved(self.list_min_val,self.list_max_val,self.best_individual_decoded_ever,self.best_individual_encoded_ever)
+        #######################################################################

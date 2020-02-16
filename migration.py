@@ -6,7 +6,7 @@ Created on Thu Mar 16 13:18:52 2017
 """
 import random
 import math
-import genes
+from .genes import *
 
 def migration(individual,list_individual_encoded,fitness_values,migration_probability,objective_number,bitno,gene_no,remainder,best_encoded_ever):
     if remainder == 1:
