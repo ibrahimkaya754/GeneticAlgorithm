@@ -8,16 +8,22 @@ Modification began on 22/01/2020
 
 """
 # IMPORT MODULES
-from .genes import *
-from .input import *
-from .selection import *
-from .crossover import *
-from .mutation import *
-from .output import *
-from .find_minmax import *
-from .global_fitness_normalization import *
-from .migration import *
-from .test_functions import *
+
+import os
+import sys
+current_dir = os.getcwd()
+sys.path.append(current_dir)
+
+from genes import *
+from input import *
+from selection import *
+from crossover import *
+from mutation import *
+from output import *
+from find_minmax import *
+from global_fitness_normalization import *
+from migration import *
+from test_functions import *
 
 class MoGenA():
     def __init__(self,number_of_variables, lower_boundaries, upper_boundaries,
